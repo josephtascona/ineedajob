@@ -1,0 +1,17 @@
+body {
+  padding: 50px;
+  font-family: 'Roboto';
+}
+
+a {
+  color: #00B7FF;
+}
+
+.navbar-dark {
+  background-color: #009688;
+}
+
+.btn-primary {
+  background-color: #CDDC39;
+  border: 1px solid #CDDC39;
+}
