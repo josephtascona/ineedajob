@@ -1,5 +1,4 @@
 body {
-  padding: 50px;
   font-family: 'Roboto';
 }
 
@@ -14,4 +13,14 @@ a {
 .btn-primary {
   background-color: #CDDC39;
   border: 1px solid #CDDC39;
+}
+
+.btn-primary:hover {
+  background-color: #009688 !important;
+  border: 1px solid #009688 !important;
+}
+
+main {
+  padding-top: 20px;
+  padding-left: 50px;
 }

@@ -6,7 +6,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./controllers/index');
 var usersRouter = require('./controllers/users');
-var regionsRouter = require('./controllers/regions')
+var regionsRouter = require('./controllers/regions');
+var employersRouter = require('./controllers/employers');
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/regions', regionsRouter); // point this url path to our new regions.js controller
+app.use('/employers', employersRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
