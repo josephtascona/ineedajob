@@ -24,3 +24,7 @@ main {
   padding-top: 20px;
   padding-left: 50px;
 }
+
+fieldset {
+  margin: 5px;
+}

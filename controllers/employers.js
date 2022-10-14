@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 // import Employer model
 const Employer = require('../models/employer')
+const Region = require('../models/region')
 
 // GET: /employers => show list of employers
 router.get('/', (req, res) => {
@@ -20,7 +21,16 @@ router.get('/', (req, res) => {
 
 //  GET: /employers/add => show blank employer from
 router.get('/add', (req, res) => {
-    res.render('employers/add', { title: 'Add Employer' })
+    Region.find((err, regions) => {
+        if (err) {
+            console.log(err)
+        } else {
+            res.render('employers/add', { 
+                title: 'Add Employer',
+                regions: regions
+            })
+        }
+    }).sort('name')
 })
 
 // POST: /employers.create => form submission
@@ -33,6 +43,36 @@ router.post('/add', (req, res) => {
             res.redirect('/employers')
         }
     })
+})
+
+router.get('/delete/:_id', (req,res) => {
+    Employer.remove({_id: req.params._id}, (err) => {
+        if (err) {
+            console.log(err)
+        } else {
+            res.redirect('/employers')
+        }
+    })
+})
+
+router.get('/edit/:_id', (req, res) => {
+    Region.find((err, regions) => {
+        if (err) {
+            console.log(err)
+        } else {
+            Employer.findById(req.params._id, (err, employer) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.render('employers/edit', {
+                        title: 'Edit Employer',
+                        regions: regions,
+                        employer: employer
+                    })
+                }
+            })
+        }
+    }).sort('name')
 })
 
 // make public

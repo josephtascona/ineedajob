@@ -41,6 +41,18 @@ app.use('/users', usersRouter);
 app.use('/regions', regionsRouter); // point this url path to our new regions.js controller
 app.use('/employers', employersRouter)
 
+// hbs helper function to pre-select correct dropdown option
+const hbs = require('hbs');
+hbs.registerHelper('selectCorrectOption', (currentVal, selectedVal) => {
+  // if values match, append ' selected' to this option tag
+  let selectedProperty = '';
+  if (currentVal === selectedVal) {
+    selectedProperty = ' selected'
+  }
+
+  return new hbs.SafeString(`<option${selectedProperty}>${currentVal}</option>`)
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

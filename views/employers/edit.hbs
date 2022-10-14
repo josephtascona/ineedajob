@@ -1,20 +1,20 @@
-<h1>Add a New Employer</h1>
+<h1>Edit Employer</h1>
 <form method="post">
     <fieldset>
         <label for="name" class="col-2">Name: *</label>
-        <input name="name" id="name" required />
+        <input name="name" id="name" required value="{{employer.name}}" />
     </fieldset>
     <fieldset>
         <label for="region" class="col-2">Region: *</label>
         <select name="region" id="region" required>
             {{#each regions}}
-                <option>{{this.name}}</option>
+                {{selectCorrectOption this.name ../employer.region}}
             {{/each}}
         </select>
     </fieldset>
     <fieldset>
         <label for="description" class="col-2">Description: *</label>
-        <textarea name="description" id="description" required></textarea>
+        <textarea name="description" id="description" required>{{employer.description}}</textarea>
     </fieldset>
     <button class="btn btn-primary offset-2">Save</button>
 </form>
