@@ -3,6 +3,15 @@ const router = express.Router()
 // import Employer model
 const Employer = require('../models/employer')
 const Region = require('../models/region')
+const passport = require('passport')
+
+// auth check to be called before any CUD method
+function isAuthenticated(req,res,next) {
+    if (req.isAuthenticated()) {
+        return next()
+    }
+    res.redirect('/auth/login')
+}
 
 // GET: /employers => show list of employers
 router.get('/', (req, res) => {
@@ -13,28 +22,30 @@ router.get('/', (req, res) => {
         } else {
             res.render('employers/index', {
                 title: 'Employers',
-                employers: employers
+                employers: employers,
+                user: req.user
             })
         }
     })
 })
 
 //  GET: /employers/add => show blank employer from
-router.get('/add', (req, res) => {
+router.get('/add', isAuthenticated, (req, res) => {
     Region.find((err, regions) => {
         if (err) {
             console.log(err)
         } else {
             res.render('employers/add', { 
                 title: 'Add Employer',
-                regions: regions
+                regions: regions,
+                user: req.user
             })
         }
     }).sort('name')
 })
 
 // POST: /employers.create => form submission
-router.post('/add', (req, res) => {
+router.post('/add', isAuthenticated, (req, res) => {
     // create a new Employer document from the fields in the form post
     Employer.create(req.body, (err, newEmployer) => {
         if (err) {
@@ -45,7 +56,7 @@ router.post('/add', (req, res) => {
     })
 })
 
-router.get('/delete/:_id', (req,res) => {
+router.get('/delete/:_id', isAuthenticated, (req,res) => {
     Employer.remove({_id: req.params._id}, (err) => {
         if (err) {
             console.log(err)
@@ -55,7 +66,7 @@ router.get('/delete/:_id', (req,res) => {
     })
 })
 
-router.get('/edit/:_id', (req, res) => {
+router.get('/edit/:_id', isAuthenticated, (req, res) => {
     Region.find((err, regions) => {
         if (err) {
             console.log(err)
@@ -67,7 +78,8 @@ router.get('/edit/:_id', (req, res) => {
                     res.render('employers/edit', {
                         title: 'Edit Employer',
                         regions: regions,
-                        employer: employer
+                        employer: employer,
+                        user: req.user
                     })
                 }
             })
@@ -76,7 +88,7 @@ router.get('/edit/:_id', (req, res) => {
 })
 
 // POST: /employers/edit/abc123 => update the db for the selected doc
-router.post('/edit/:_id', (req,res) => {
+router.post('/edit/:_id', isAuthenticated, (req,res) => {
     Employer.findByIdAndUpdate({_id: req.params._id}, req.body, null, (err, employer) => {
         if (err) {
             console.log(err)
