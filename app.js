@@ -8,6 +8,10 @@ var indexRouter = require('./controllers/index');
 var usersRouter = require('./controllers/users');
 var regionsRouter = require('./controllers/regions');
 var employersRouter = require('./controllers/employers');
+var authRouter = require('./controllers/auth');
+
+const passport = require('passport')
+const session = require("express-session")
 
 var app = express();
 
@@ -15,6 +19,23 @@ var app = express();
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+
+// passport config for auth
+app.use(session({
+  secret: process.env.PASSPORT_SECRET,
+  resave: true,
+  saveUninitialized: false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+const User = require('./models/user')
+passport.use(User.createStrategy())
+
+// let passport read/write user data to/from session vars
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DATABASE_URL)
@@ -40,9 +61,11 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/regions', regionsRouter); // point this url path to our new regions.js controller
 app.use('/employers', employersRouter)
+app.use('/auth', authRouter)
 
 // hbs helper function to pre-select correct dropdown option
 const hbs = require('hbs');
+const { authorize } = require('passport');
 hbs.registerHelper('selectCorrectOption', (currentVal, selectedVal) => {
   // if values match, append ' selected' to this option tag
   let selectedProperty = '';
