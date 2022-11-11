@@ -15,10 +15,7 @@ const session = require("express-session")
 
 var app = express();
 
-// db conn using .env file
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+require('dotenv').config();
 
 // passport config for auth
 app.use(session({
