@@ -4,14 +4,7 @@ const router = express.Router()
 const Employer = require('../models/employer')
 const Region = require('../models/region')
 const passport = require('passport')
-
-// auth check to be called before any CUD method
-function isAuthenticated(req,res,next) {
-    if (req.isAuthenticated()) {
-        return next()
-    }
-    res.redirect('/auth/login')
-}
+const globals = require('./globalFunctions')
 
 // GET: /employers => show list of employers
 router.get('/', (req, res) => {
@@ -30,7 +23,7 @@ router.get('/', (req, res) => {
 })
 
 //  GET: /employers/add => show blank employer from
-router.get('/add', isAuthenticated, (req, res) => {
+router.get('/add', globals.isAuthenticated, (req, res) => {
     Region.find((err, regions) => {
         if (err) {
             console.log(err)
@@ -45,7 +38,7 @@ router.get('/add', isAuthenticated, (req, res) => {
 })
 
 // POST: /employers.create => form submission
-router.post('/add', isAuthenticated, (req, res) => {
+router.post('/add', globals.isAuthenticated, (req, res) => {
     // create a new Employer document from the fields in the form post
     Employer.create(req.body, (err, newEmployer) => {
         if (err) {
@@ -56,7 +49,7 @@ router.post('/add', isAuthenticated, (req, res) => {
     })
 })
 
-router.get('/delete/:_id', isAuthenticated, (req,res) => {
+router.get('/delete/:_id', globals.isAuthenticated, (req,res) => {
     Employer.remove({_id: req.params._id}, (err) => {
         if (err) {
             console.log(err)
@@ -66,7 +59,7 @@ router.get('/delete/:_id', isAuthenticated, (req,res) => {
     })
 })
 
-router.get('/edit/:_id', isAuthenticated, (req, res) => {
+router.get('/edit/:_id', globals.isAuthenticated, (req, res) => {
     Region.find((err, regions) => {
         if (err) {
             console.log(err)
@@ -88,7 +81,7 @@ router.get('/edit/:_id', isAuthenticated, (req, res) => {
 })
 
 // POST: /employers/edit/abc123 => update the db for the selected doc
-router.post('/edit/:_id', isAuthenticated, (req,res) => {
+router.post('/edit/:_id', globals.isAuthenticated, (req,res) => {
     Employer.findByIdAndUpdate({_id: req.params._id}, req.body, null, (err, employer) => {
         if (err) {
             console.log(err)
